@@ -1,1 +1,1 @@
-"# confidential-image" 
+# confidential-image
