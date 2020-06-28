@@ -20,28 +20,16 @@ class Image
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $filepath;
+    private $slug;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $slug;
+    private $filename;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFilepath(): ?string
-    {
-        return $this->filepath;
-    }
-
-    public function setFilepath(string $filepath): self
-    {
-        $this->filepath = $filepath;
-
-        return $this;
     }
 
     public function getSlug(): ?string
@@ -52,6 +40,18 @@ class Image
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): self
+    {
+        $this->filename = $filename;
 
         return $this;
     }
