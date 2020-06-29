@@ -20,14 +20,15 @@ class TextConverter
         $this->imagesDirectory = $kernel->getProjectDir() . '/images/';
     }
 
-    public function convert(string $text, string $filename) {
+    public function convert(string $text)
+    {
         $size = imagettfbbox(self::SIZE, self::ANGLE, $this->font, $text);
         $xSize = abs($size[0]) + abs($size[2]);
         $ySize = abs($size[5]) + abs($size[1]);
 
         $image = imagecreate($xSize, $ySize);
-        $white = imagecolorallocate($image, 255,255,255);
-        $black = imagecolorallocate($image, 0,0,0);
+        $white = imagecolorallocate($image, 255, 255, 255);
+        $black = imagecolorallocate($image, 0, 0, 0);
 
         imagefilledrectangle($image, 0, 0, $xSize, $ySize, $white);
         imagettftext($image,
@@ -39,9 +40,24 @@ class TextConverter
             $this->font,
             $text);
 
-        $filepath = $this->imagesDirectory . $filename . '.png';
-        imagepng($image, $filepath);
+        $file = $this->changeFilename();
+        while (file_exists($file['filepath'])) {
+            $file = $this->changeFilename();
+        }
+
+        imagepng($image, $file['filepath']);
         imagedestroy($image);
-        return $filepath;
+        return $file['slug'];
+    }
+
+    private function changeFilename()
+    {
+        $slug = uniqid();
+        $filename = 'image' . $slug;
+        $filepath = $this->imagesDirectory . $filename . '.png';
+        return [
+            'slug' => $slug,
+            'filepath' => $filepath
+        ];
     }
 }
