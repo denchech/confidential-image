@@ -16,3 +16,4 @@
 ###< symfony/phpunit-bridge ###
 /images/
 .idea
+/public/images/

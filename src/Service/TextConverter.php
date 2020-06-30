@@ -17,7 +17,8 @@ class TextConverter
     public function __construct(KernelInterface $kernel)
     {
         $this->font = $kernel->getProjectDir() . '/fonts/arial.ttf';
-        $this->imagesDirectory = $kernel->getProjectDir() . '/images/';
+//        $this->imagesDirectory = $kernel->getProjectDir() . '/images/';
+        $this->imagesDirectory = $kernel->getProjectDir() . '/public/images/';
     }
 
     public function convert(string $text)
@@ -47,16 +48,15 @@ class TextConverter
 
         imagepng($image, $file['filepath']);
         imagedestroy($image);
-        return $file['slug'];
+        return $file['uuid'];
     }
 
     private function changeFilename()
     {
-        $slug = uniqid();
-        $filename = 'image' . $slug;
-        $filepath = $this->imagesDirectory . $filename . '.png';
+        $uuid = uniqid();
+        $filepath = $this->imagesDirectory . $uuid . '.png';
         return [
-            'slug' => $slug,
+            'uuid' => $uuid,
             'filepath' => $filepath
         ];
     }
