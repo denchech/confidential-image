@@ -4,8 +4,6 @@
 namespace App\Service;
 
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
 class TextConverter
 {
     private const SIZE = 14;
@@ -13,26 +11,27 @@ class TextConverter
 
     private $font;
     private $imagesDirectory;
+    private $image;
+    private $filepath;
 
-    public function __construct(KernelInterface $kernel)
+    public function __construct($imagesDirectory, $fontsDirectory)
     {
-        $this->font = $kernel->getProjectDir() . '/fonts/arial.ttf';
-//        $this->imagesDirectory = $kernel->getProjectDir() . '/images/';
-        $this->imagesDirectory = $kernel->getProjectDir() . '/public/images/';
+        $this->font = $fontsDirectory . 'arial.ttf';
+        $this->imagesDirectory = $imagesDirectory;
     }
 
-    public function convert(string $text)
+    public function convert(string $text): string
     {
         $size = imagettfbbox(self::SIZE, self::ANGLE, $this->font, $text);
         $xSize = abs($size[0]) + abs($size[2]);
         $ySize = abs($size[5]) + abs($size[1]);
 
-        $image = imagecreate($xSize, $ySize);
-        $white = imagecolorallocate($image, 255, 255, 255);
-        $black = imagecolorallocate($image, 0, 0, 0);
+        $this->image = imagecreate($xSize, $ySize);
+        $white = imagecolorallocate($this->image, 255, 255, 255);
+        $black = imagecolorallocate($this->image, 0, 0, 0);
 
-        imagefilledrectangle($image, 0, 0, $xSize, $ySize, $white);
-        imagettftext($image,
+        imagefilledrectangle($this->image, 0, 0, $xSize, $ySize, $white);
+        imagettftext($this->image,
             self::SIZE,
             self::ANGLE,
             abs($size[0]),
@@ -45,13 +44,22 @@ class TextConverter
         while (file_exists($file['filepath'])) {
             $file = $this->changeFilename();
         }
+        $this->filepath = $file['filepath'];
 
-        imagepng($image, $file['filepath']);
-        imagedestroy($image);
         return $file['uuid'];
     }
 
-    private function changeFilename()
+    public function save(): bool
+    {
+        if (!$this->image) {
+            return false;
+        }
+        imagepng($this->image, $this->filepath);
+        imagedestroy($this->image);
+        return true;
+    }
+
+    private function changeFilename(): array
     {
         $uuid = uniqid();
         $filepath = $this->imagesDirectory . $uuid . '.png';
