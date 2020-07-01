@@ -29,6 +29,31 @@ class Image implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $openingsNumber;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $maxOpeningsNumber;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $expiresAt;
+
+    /**
+     * Image constructor.
+     */
+    public function __construct()
+    {
+        $this->openingsNumber = 0;
+        $this->expiresAt = new \DateTime("midnight");
+        $this->expiresAt->modify('+1 week');
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,7 +78,7 @@ class Image implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->uuid;
+        return (string)$this->uuid;
     }
 
     /**
@@ -61,11 +86,6 @@ class Image implements UserInterface
      */
     public function getRoles(): array
     {
-//        $roles = $this->roles;
-//        // guarantee every user at least has ROLE_USER
-//        $roles[] = 'ROLE_USER';
-//
-//        return array_unique($roles);
         return ['ROLE_USER'];
     }
 
@@ -74,7 +94,7 @@ class Image implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -89,7 +109,7 @@ class Image implements UserInterface
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+
     }
 
     /**
@@ -97,7 +117,45 @@ class Image implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+
+    }
+
+    public function getExtension(): string
+    {
+        return '.png';
+    }
+
+    public function getFilename(): string
+    {
+        return $this->getUuid() . $this->getExtension();
+    }
+
+    public function open(): ?int
+    {
+        return ++$this->openingsNumber;
+    }
+
+    public function getMaxOpeningsNumber(): ?int
+    {
+        return $this->maxOpeningsNumber;
+    }
+
+    public function setMaxOpeningsNumber(int $maxOpeningsNumber): self
+    {
+        $this->maxOpeningsNumber = $maxOpeningsNumber;
+
+        return $this;
+    }
+
+    public function getExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt(\DateTimeInterface $expiresAt): self
+    {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
     }
 }
