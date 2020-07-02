@@ -36,6 +36,15 @@ class ImageRepository extends ServiceEntityRepository implements PasswordUpgrade
         $this->_em->flush();
     }
 
+    public function findExpired()
+    {
+        $now = new \DateTime("midnight");
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.expiresAt < :now')
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Image[] Returns an array of Image objects
     //  */

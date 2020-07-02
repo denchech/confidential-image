@@ -1,0 +1,7 @@
+my_builder_cronos:
+  exporter:
+    key: unique-key
+    path: /bin:/usr/local/bin
+    executor: php
+    console: bin/console
+    shell: /bin/bash
