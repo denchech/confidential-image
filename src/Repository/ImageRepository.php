@@ -41,6 +41,7 @@ class ImageRepository extends ServiceEntityRepository implements PasswordUpgrade
         $now = new \DateTime("midnight");
         return $this->createQueryBuilder('i')
             ->andWhere('i.expiresAt < :now')
+            ->orWhere('i.maxOpeningsNumber <= i.openingsNumber')
             ->setParameter('now', $now)
             ->getQuery()
             ->getResult();

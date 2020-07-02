@@ -45,6 +45,11 @@ class Image implements UserInterface
     private $expiresAt;
 
     /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $openings = [];
+
+    /**
      * Image constructor.
      */
     public function __construct()
@@ -130,8 +135,12 @@ class Image implements UserInterface
         return $this->getUuid() . $this->getExtension();
     }
 
-    public function open(): ?int
+    public function open($url): ?int
     {
+        $time = new \DateTime('now');
+        $this->openings[] = $time;
+        $_COOKIE['last_opening_time'] = $time;
+        $_COOKIE['last_opening_image_path'] = $url;
         return ++$this->openingsNumber;
     }
 
@@ -157,5 +166,13 @@ class Image implements UserInterface
         $this->expiresAt = $expiresAt;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOpenings(): array
+    {
+        return $this->openings;
     }
 }
