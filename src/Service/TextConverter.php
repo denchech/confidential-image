@@ -4,6 +4,8 @@
 namespace App\Service;
 
 
+use App\Entity\Image;
+
 class TextConverter
 {
     private const SIZE = 14;
@@ -62,7 +64,7 @@ class TextConverter
     private function changeFilename(): array
     {
         $uuid = uniqid();
-        $filepath = $this->imagesDirectory . $uuid . '.png';
+        $filepath = $this->imagesDirectory . $uuid . Image::getExtension();
         return [
             'uuid' => $uuid,
             'filepath' => $filepath

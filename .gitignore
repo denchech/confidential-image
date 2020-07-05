@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -15,5 +14,5 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 /images/
-.idea
+/.idea/
 /public/images/

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -35,12 +37,14 @@ class Image implements UserInterface
     private $openingsNumber;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Positive()
      */
     private $maxOpeningsNumber;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
+     * @Assert\Type("\DateTime")
      */
     private $expiresAt;
 
@@ -48,6 +52,11 @@ class Image implements UserInterface
      * @ORM\Column(type="json", nullable=true)
      */
     private $openings = [];
+
+    /**
+     * @Assert\NotBlank()
+     */
+    private $text;
 
     /**
      * Image constructor.
@@ -125,22 +134,22 @@ class Image implements UserInterface
 
     }
 
-    public function getExtension(): string
+    public static function getExtension(): string
     {
         return '.png';
     }
 
     public function getFilename(): string
     {
-        return $this->getUuid() . $this->getExtension();
+        return $this->getUuid() . self::getExtension();
     }
 
     public function open($url): ?int
     {
-        $time = new \DateTime('now');
+        $time = new \DateTime("now", new \DateTimeZone("UTC"));
         $this->openings[] = $time;
-        $_COOKIE['last_opening_time'] = $time;
-        $_COOKIE['last_opening_image_path'] = $url;
+        setcookie('last_opening_time', $time->format("Y-m-d H:i:s"), time() + 300);
+        setcookie('last_opening_image_path', $url, time() + 300);
         return ++$this->openingsNumber;
     }
 
@@ -174,5 +183,40 @@ class Image implements UserInterface
     public function getOpenings(): array
     {
         return $this->openings;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $now = new \DateTime("midnight");
+        $maxTime = new \DateTime("+1 year");
+        if ($this->getExpiresAt() < $now) {
+            $context->buildViolation("The date must be future")
+                ->atPath('expiresAt')
+                ->addViolation();
+        }
+        if ($this->getExpiresAt() > $maxTime) {
+            $context->buildViolation("The date must be less than a year")
+                ->atPath('expiresAt')
+                ->addViolation();
+        }
     }
 }
