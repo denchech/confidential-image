@@ -44,8 +44,7 @@ class ImagesDeleteExpiredCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Delete all expired images')
-        ;
+            ->setDescription('Delete all expired images');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
