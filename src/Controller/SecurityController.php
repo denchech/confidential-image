@@ -20,9 +20,9 @@ class SecurityController extends AbstractController
         if (!preg_match("/\/image\/[0-9a-zA-Z]+/", $targetPath)) {
             return $this->redirectToRoute('app_main');
         }
-         if ($this->getUser()) {
-             return $this->redirectToRoute('app_main');
-         }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_main');
+        }
         $error = $authenticationUtils->getLastAuthenticationError();
         return $this->render('security/login.html.twig', ['target_path' => $targetPath, 'error' => $error]);
     }

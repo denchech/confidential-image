@@ -75,7 +75,11 @@ class ImageAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        if ($this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
+            return true;
+        } else {
+            throw new CustomUserMessageAuthenticationException('Wrong password');
+        }
     }
 
     /**
