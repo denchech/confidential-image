@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-4">Confidential Image</h1>
+        <p class="lead">You can convert text to an image to prevent its reading by any text algorithms</p>
+        <hr class="my-4">
+        <p>We don't save your data as text, so you may not to be afraid of insecurity</p>
+        <p class="lead">
+            <a class="btn btn-outline-dark btn-lg" href="{{ path('app_main') }}" role="button">Generator</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block title %}
+Confidential Image
+{% endblock %}
+
