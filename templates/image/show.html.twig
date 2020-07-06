@@ -1,18 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if image is defined %}
-        <img alt="Your image" src="{{ asset('/images/'~image.filename) }}"/>
-        <p>Expires at {{ image.expiresAt | date }} UTC</p>
-        Openings: <br>
-        {% for opening in image.openings[:-1] %}
-            {{ opening["date"] | date }} UTC<br>
-        {% endfor %}
-    {% else %}
-        <h2>The image is deleted</h2>
-    {% endif %}
+    <div class="container" style="border:1px solid #cecece; width: 80%;">
+        {% if image is defined %}
+            <img alt="Your image" style="display: block;
+    margin-left: auto;
+    margin-right: auto" src="{{ asset('/images/'~image.filename) }}"/><br>
+            <h4>Expires at {{ image.expiresAt | date }} UTC</h4>
+            <h4>Openings: </h4>
+            <h5>
+                {% for opening in image.openings[:-1] %}
+                    {{ opening["date"] | date }} UTC<br>
+                {% endfor %}
+            </h5>
+        {% else %}
+            <h2>The image is deleted</h2>
+        {% endif %}
+    </div>
 {% endblock %}
-
 {% block title %}
 Show Image
 {% endblock %}
