@@ -39,6 +39,7 @@ class Image implements UserInterface
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Positive()
+     * @Assert\LessThanOrEqual(1000)
      */
     private $maxOpeningsNumber;
 
