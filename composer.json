@@ -4,7 +4,9 @@
     "require": {
         "php": "^7.2.5",
         "ext-ctype": "*",
+        "ext-gd": "*",
         "ext-iconv": "*",
+        "mybuilder/cronos-bundle": "^3.1",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "5.1.*",
         "symfony/console": "5.1.*",
@@ -32,7 +34,7 @@
     },
     "require-dev": {
         "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.19",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*"
     },

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+{% endblock %}
+{% block title %}Generate Image{% endblock %}
+{% block generator_active %}active{% endblock %}
+{% block body %}
+        {% for message in app.flashes('generator') %}
+            <div class="alert alert-success mb-0" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% if app.session.flashBag.peek('link')|length > 0 %}
+        {% block javascripts %}
+            <script src="{{ asset('js/copy.js') }}"></script>
+        {% endblock %}
+        <div class="alert alert-info" role="alert">
+            {% for messages in app.flashes(['link', 'password']) %}
+                {% for message in messages %}
+                    {{ message | striptags('<a>,<button>,<span>,<i>') | raw }}
+                    <br>
+                {% endfor %}
+            {% endfor %}
+            <span id="msg"></span>
+        </div>
+    {% endif %}
+    <div class="container" style="border:1px solid #cecece; width: 80%;">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-outline-dark">Generate</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
